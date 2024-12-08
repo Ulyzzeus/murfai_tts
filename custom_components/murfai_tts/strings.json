@@ -1,0 +1,21 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add text-to-speech engine",
+        "description": "Provide configuration data. See documentation for further info.",
+        "data": {
+          "model": "Select model to be used.",
+          "style": "Select style.",
+          "url": "Enter the MurfAI-compatible endpoint. Optionally include a port number."
+        }
+      }
+    },
+    "error": {
+      "already_configured": "This style and endpoint are already configured."
+    },
+    "abort": {
+      "already_configured": "This style and endpoint are already configured."
+    }
+  }
+}

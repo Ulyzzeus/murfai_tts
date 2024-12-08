@@ -1,0 +1,16 @@
+{
+  "domain": "murfai_tts",
+  "name": "MurfAI TTS",
+  "codeowners": [
+    "@celly"
+  ],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/bbcelly/murfai_tts/",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/bbcelly/murfai_tts/issues",
+  "requirements": [
+    "requests>=2.25.1"
+  ],
+  "version": "0.2.2"
+}

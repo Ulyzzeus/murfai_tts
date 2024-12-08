@@ -1,0 +1,21 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Füge eine Text zu Sprache Engine hinzu",
+        "description": "Gib Konfigurationsdaten ein. Schau in die Dokumentation für weitere Informationen.",
+        "data": {
+          "model": "Wähle das zu verwendende Modell.",
+          "style": "Wählen Sie den Stil aus.",
+          "url": "Gib den MurfAI-kompatiblen Endpunkt ein. Optional kann eine Portnummer angegeben werden."
+        }
+      }
+    },
+    "error": {
+      "already_configured": "Diese Stimme und Endpunkt sind bereits konfiguriert."
+    },
+    "abort": {
+      "already_configured": "Diese Stimme und Endpunkt sind bereits konfiguriert."
+    }
+  }
+}
