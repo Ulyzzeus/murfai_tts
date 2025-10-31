@@ -59,7 +59,7 @@ class MurfAITTSEntity(TextToSpeechEntity):
         if self._attr_unique_id is None:
             # generate a legacy unique_id
             self._attr_unique_id = f"{config.data[CONF_STYLE]}_{config.data[CONF_MODEL]}"
-        self.entity_id = generate_entity_id("tts.murfai_tts_{}", config.data[CONF_STYLE], hass=hass)
+        self.entity_id = generate_entity_id(f"tts.{DOMAIN}_" + "{}", config.data[CONF_STYLE], hass=hass)
 
     @property
     def default_language(self):
