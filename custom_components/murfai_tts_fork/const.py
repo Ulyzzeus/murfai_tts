@@ -1,9 +1,18 @@
 """ Constants for MurfAI TTS custom component"""
 
 DOMAIN = "murfai_tts_fork"
-CONF_MODEL = 'model'
-CONF_STYLE = 'style'
-CONF_URL = 'url'
+CONF_API_KEY = "api_key"
+CONF_URL = "url"
+CONF_MODEL = "model" # Corresponds to 'voiceId' in the API
+CONF_STYLE = "style"
 UNIQUE_ID = 'unique_id'
-MODELS = ["VM0165993640063143B"]
-STYLES = ["Promo", "Conversational", "Documentary", "Narration", "Inspirational", "Calm"]
+
+# Optional Parameters
+CONF_FORMAT_MP3 = "format_mp3" # Boolean switch for MP3 format
+CONF_SAMPLE_RATE = "sample_rate"
+CONF_LOCALE = "locale" # For multiNativeLocale
+CONF_PRONUNCIATION = "pronunciation" # For pronunciationDictionary
+
+# You should update these lists with values from the paid API
+MODELS = ["en-US-terrell", "en-US-diane", "en-GB-duncan"] # Example voice IDs
+STYLES = ["Inspirational", "Conversational", "Promotional"]
