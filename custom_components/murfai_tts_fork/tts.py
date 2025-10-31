@@ -7,7 +7,18 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.entity import generate_entity_id
-from .const import CONF_MODEL, CONF_STYLE, CONF_URL, DOMAIN, UNIQUE_ID
+from .const import (
+    CONF_API_KEY,
+    CONF_MODEL,
+    CONF_STYLE,
+    CONF_URL,
+    CONF_FORMAT_MP3,
+    CONF_MULTI_NATIVE_LOCALE,
+    CONF_PRONUNCIATION_DICTIONARY,
+    CONF_SAMPLE_RATE,
+    DOMAIN,
+    UNIQUE_ID,
+)
 from .murfaitts_engine import MurfAITTSEngine
 from homeassistant.exceptions import MaxLengthExceeded
 
@@ -21,9 +32,14 @@ async def async_setup_entry(
     """Set up MurfAI Text-to-speech platform via config entry."""
 
     engine = MurfAITTSEngine(
+        config_entry.data[CONF_API_KEY],
         config_entry.data[CONF_STYLE],
         config_entry.data[CONF_MODEL],
-        config_entry.data[CONF_URL]
+        config_entry.data[CONF_URL],
+        config_entry.data.get(CONF_FORMAT_MP3, False),
+        config_entry.data.get(CONF_MULTI_NATIVE_LOCALE),
+        config_entry.data.get(CONF_PRONUNCIATION_DICTIONARY),
+        config_entry.data.get(CONF_SAMPLE_RATE, 44100),
     )
     async_add_entities([MurfAITTSEntity(hass, config_entry, engine)])
 
@@ -60,7 +76,7 @@ class MurfAITTSEntity(TextToSpeechEntity):
         return {
             "identifiers": {(DOMAIN, self._attr_unique_id)},
             "model": f"{self._config.data[CONF_STYLE]}",
-            "manufacturer": "MurfAI"
+            "manufacturer": "MurfAI (fork)"
         }
 
     @property
@@ -77,7 +93,7 @@ class MurfAITTSEntity(TextToSpeechEntity):
             speech = self._engine.get_tts(message)
 
             # The response should contain the audio file content
-            return "mp3", speech
+            return self._engine._format.lower(), speech
         except MaxLengthExceeded:
             _LOGGER.error("Maximum length of the message exceeded")
         except Exception as e:

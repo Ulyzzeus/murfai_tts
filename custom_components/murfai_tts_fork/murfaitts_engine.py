@@ -1,45 +1,69 @@
 import requests
-import urllib.parse
+import json
 from io import BytesIO
 
 class MurfAITTSEngine:
 
-      # Add api_key to the constructor
-    def __init__(self, style: str, model: str, url: str, api_key: str):
-        self._style = style # Note: The paid API may not use 'style' in the same way. The curl example doesn't show it.
-        self._model = model # This will now be the voiceId, e.g., 'en-US-terrell'
-        self._url = url # This should be 'https://api.murf.ai/v1/speech/generate'
-        self._api_key = api_key # Store the API key
+    def __init__(self, api_key: str, style: str, model: str, url: str, format_mp3: bool, multi_native_locale: str, pronunciation_dictionary: str, sample_rate: int):
+        self._api_key = api_key
+        self._style = style
+        self._model = model
+        self._url = url
+        self._format = "MP3" if format_mp3 else "WAV"
+        self._multi_native_locale = multi_native_locale
+        if pronunciation_dictionary:
+            self._pronunciation_dictionary = json.loads(pronunciation_dictionary)
+        else:
+            self._pronunciation_dictionary = None
+        self._sample_rate = sample_rate
 
     def get_tts(self, text: str):
-        """ Makes request to the paid MurfAI TTS API to convert text into audio"""
-        
-        # 1. Define the headers for authentication and content type
+        """ Makes request to MurfAI TTS engine to convert text into audio"""
         headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
             "api-key": self._api_key,
-            "Content-Type": "application/json"
         }
-
-        # 2. Define the payload (the data body) as a Python dictionary
-        # The paid API uses 'voiceId', which corresponds to your 'model'
-        payload = {
+        data = {
             "text": text,
-            "voiceId": self._model
-            # The 'style' parameter might be part of a different field or not supported by this endpoint.
-            # You'll need to check the Murf.ai API documentation for how to specify style/tone.
-            # For now, we will omit it as per the curl example.
+            "voiceId": self._model,
+            "style": self._style,
+            "format": self._format,
+            "sampleRate": self._sample_rate,
         }
 
-        # 3. Make the POST request
-        # We use the 'json' parameter of requests.post, which automatically converts the dict to JSON
-        resp = requests.post(self._url, headers=headers, json=payload)
-        
-        # This part remains the same
+        if self._multi_native_locale:
+            data["multiNativeLocale"] = self._multi_native_locale
+
+        if self._pronunciation_dictionary:
+            data["pronunciationDictionary"] = self._pronunciation_dictionary
+
+
+        resp = requests.post(self._url, headers=headers, json=data)
         resp.raise_for_status()
-        return resp.content
+
+        # The response contains a link to the audio file, so we need to download it
+        audio_url = resp.json().get("audioFile")
+        if not audio_url:
+            raise Exception("No audio file URL in response")
+
+        audio_resp = requests.get(audio_url)
+        audio_resp.raise_for_status()
+        return audio_resp.content
+
+    @staticmethod
+    def get_voices(api_key: str):
+        """Fetches the list of available voices from the MurfAI API."""
+        headers = {
+            "api-key": api_key,
+        }
+        url = "https://api.murf.ai/v1/speech/voices"
+        resp = requests.get(url, headers=headers)
+        resp.raise_for_status()
+        return resp.json()
 
     @staticmethod
     def get_supported_langs() -> list:
         """Returns list of supported languages."""
-        # You should update this based on the paid API's capabilities
-        return ["en"]
+        # You may want to update this list based on the languages supported by the paid API
+        return ["en", "de"]

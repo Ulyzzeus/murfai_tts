@@ -2,20 +2,45 @@
   "config": {
     "step": {
       "user": {
-        "title": "Add text-to-speech engine",
-        "description": "Provide configuration data. See documentation for further info.",
+        "title": "MurfAI TTS: API Key",
+        "description": "Please enter your MurfAI API key to fetch the available voices.",
         "data": {
-          "model": "Select model to be used.",
-          "style": "Select style.",
-          "url": "Enter the MurfAI-compatible endpoint. Optionally include a port number."
+          "api_key": "MurfAI API Key"
+        }
+      },
+      "model": {
+        "title": "MurfAI TTS: Select Voice",
+        "description": "Please select a voice model.",
+        "data": {
+          "model": "Voice Model"
+        }
+      },
+      "style": {
+        "title": "MurfAI TTS: Select Style",
+        "description": "Please select a voice style.",
+        "data": {
+          "style": "Voice Style"
+        }
+      },
+      "options": {
+        "title": "MurfAI TTS: Additional Options",
+        "description": "Configure the additional options for the text-to-speech engine.",
+        "data": {
+          "url": "API Endpoint URL",
+          "format_mp3": "Use MP3 format (WAV is the default).",
+          "multi_native_locale": "Multi-native locale (e.g., 'en-US').",
+          "pronunciation_dictionary": "Pronunciation dictionary (JSON format).",
+          "sample_rate": "Sample rate."
         }
       }
     },
     "error": {
-      "already_configured": "This style and endpoint are already configured."
+      "already_configured": "This voice and style are already configured.",
+      "invalid_api_key": "The provided API key is invalid.",
+      "unknown_error": "An unknown error occurred."
     },
     "abort": {
-      "already_configured": "This style and endpoint are already configured."
+      "already_configured": "This voice and style are already configured."
     }
   }
 }

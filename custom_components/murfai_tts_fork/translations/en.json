@@ -5,9 +5,14 @@
         "title": "Add text-to-speech engine",
         "description": "Provide configuration data. See documentation for further info.",
         "data": {
+          "api_key": "Enter your MurfAI API Key.",
           "model": "Select model to be used.",
           "style": "Select style.",
-          "url": "Enter the MurfAI-compatible endpoint. Optionally include a port number."
+          "url": "Enter the MurfAI-compatible endpoint. Optionally include a port number.",
+          "format_mp3": "Use MP3 format (WAV is the default).",
+          "multi_native_locale": "Multi-native locale (e.g., 'en-US').",
+          "pronunciation_dictionary": "Pronunciation dictionary (JSON format).",
+          "sample_rate": "Sample rate."
         }
       }
     },
