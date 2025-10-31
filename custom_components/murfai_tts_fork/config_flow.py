@@ -18,6 +18,7 @@ def generate_unique_id(user_input: dict) -> str:
     """Generate a unique id from user input."""
     url = urlparse(user_input[CONF_URL])
     return f"{url.hostname}_{user_input[CONF_MODEL]}_{user_input[CONF_STYLE]}"
+				return self.async_create_entry(title=f"MurfAI TTS Fork ({hostname}, {user_input[CONF_MODEL]})", data=user_input) #
 
 async def validate_user_input(user_input: dict):
     """Validate user input fields."""
