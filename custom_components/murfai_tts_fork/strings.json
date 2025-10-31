@@ -2,28 +2,28 @@
   "config": {
     "step": {
       "user": {
-        "title": "MurfAI TTS: API Key",
+        "title": "MurfAI TTS (Dev): API Key",
         "description": "Please enter your MurfAI API key to fetch the available voices.",
         "data": {
           "api_key": "MurfAI API Key"
         }
       },
       "model": {
-        "title": "MurfAI TTS: Select Voice",
+        "title": "MurfAI TTS (Dev): Select Voice",
         "description": "Please select a voice model.",
         "data": {
           "model": "Voice Model"
         }
       },
       "style": {
-        "title": "MurfAI TTS: Select Style",
+        "title": "MurfAI TTS (Dev): Select Style",
         "description": "Please select a voice style.",
         "data": {
           "style": "Voice Style"
         }
       },
       "options": {
-        "title": "MurfAI TTS: Additional Options",
+        "title": "MurfAI TTS (Dev): Additional Options",
         "description": "Configure the additional options for the text-to-speech engine.",
         "data": {
           "url": "API Endpoint URL",
@@ -40,7 +40,8 @@
       "unknown_error": "An unknown error occurred."
     },
     "abort": {
-      "already_configured": "This voice and style are already configured."
+      "already_configured": "This voice and style are already configured.",
+      "no_voice_selected": "No voice was selected. Please start over."
     }
   }
 }
