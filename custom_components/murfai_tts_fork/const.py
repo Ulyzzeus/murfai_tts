@@ -14,7 +14,4 @@ CONF_MULTI_NATIVE_LOCALE = 'multi_native_locale'
 CONF_LOCALE = "locale" # For multiNativeLocale
 CONF_PRONUNCIATION_DICTIONARY = 'pronunciation_dictionary'
 
-# You should update these lists with values from the paid API
-MODELS = ["en-US-terrell", "en-US-diane", "en-GB-duncan"] # Example voice IDs
-STYLES = ["Inspirational", "Conversational", "Promotional"]
 SAMPLE_RATES = [8000, 24000, 44100, 48000]
