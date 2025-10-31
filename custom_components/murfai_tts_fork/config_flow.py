@@ -85,6 +85,8 @@ class MurfAITTSConfigFlow(ConfigFlow, domain=DOMAIN):
             self.selected_voice = next(
                 (v for v in self.voices if v["voiceId"] == self.data[CONF_MODEL]), None
             )
+            if self.selected_voice:
+                self.data['displayName'] = self.selected_voice.get('displayName', self.data[CONF_MODEL])
             return await self.async_step_style()
 
         # Filter voices for English and German
@@ -103,6 +105,9 @@ class MurfAITTSConfigFlow(ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             self.data[CONF_STYLE] = user_input[CONF_STYLE]
             return await self.async_step_options()
+
+        if not self.selected_voice:
+            return self.async_abort(reason="no_voice_selected")
 
         styles = self.selected_voice.get("availableStyles", [])
         if not styles:
@@ -127,7 +132,7 @@ class MurfAITTSConfigFlow(ConfigFlow, domain=DOMAIN):
                 await self.async_set_unique_id(unique_id)
                 self._abort_if_unique_id_configured()
                 return self.async_create_entry(
-                    title=f"MurfAI TTS ({self.selected_voice['displayName']}, {self.data[CONF_STYLE]})",
+                    title=f"MurfAI TTS ({self.data.get('displayName', self.data[CONF_MODEL])}, {self.data[CONF_STYLE]})",
                     data=self.data,
                 )
             except data_entry_flow.AbortFlow:
