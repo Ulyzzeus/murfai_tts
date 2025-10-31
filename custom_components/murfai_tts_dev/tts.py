@@ -76,7 +76,7 @@ class MurfAITTSEntity(TextToSpeechEntity):
         return {
             "identifiers": {(DOMAIN, self._attr_unique_id)},
             "model": f"{self._config.data[CONF_STYLE]}",
-            "manufacturer": "MurfAI (fork)"
+            "manufacturer": "MurfAI (Dev)"
         }
 
     @property

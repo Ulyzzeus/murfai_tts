@@ -1,6 +1,6 @@
 {
-  "domain": "murfai_tts_fork",
-  "name": "MurfAI TTS (fork)",
+  "domain": "murfai_tts_dev",
+  "name": "MurfAI TTS (Dev)",
   "codeowners": [
     "@ulyzzeus"
   ],

@@ -1,5 +1,5 @@
 {
-    "name": "MurfAI TTS Speech Service (fork)",
+    "name": "MurfAI TTS Speech Service (Dev)",
     "homeassistant": "2024.5.3",
     "render_readme": true,
     "version": "0.2.3"
