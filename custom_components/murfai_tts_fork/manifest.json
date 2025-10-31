@@ -1,8 +1,8 @@
 {
-  "domain": "murfai_tts",
-  "name": "MurfAI TTS",
+  "domain": "murfai_tts_fork",
+  "name": "UlyzzeusAI TTS",
   "codeowners": [
-    "@celly"
+    "@ulyzzeus"
   ],
   "config_flow": true,
   "dependencies": [],

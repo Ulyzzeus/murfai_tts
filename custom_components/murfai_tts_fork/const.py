@@ -1,6 +1,6 @@
 """ Constants for MurfAI TTS custom component"""
 
-DOMAIN = "murfai_tts"
+DOMAIN = "murfai_tts_fork"
 CONF_MODEL = 'model'
 CONF_STYLE = 'style'
 CONF_URL = 'url'
