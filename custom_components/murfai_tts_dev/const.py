@@ -10,4 +10,5 @@ CONF_MULTI_NATIVE_LOCALE = 'multi_native_locale'
 CONF_PRONUNCIATION_DICTIONARY = 'pronunciation_dictionary'
 CONF_SAMPLE_RATE = 'sample_rate'
 UNIQUE_ID = 'unique_id'
-SAMPLE_RATES = [8000, 24000, 44100, 48000]
+# Change this list to contain strings
+SAMPLE_RATES = ["8000", "24000", "44100", "48000"]

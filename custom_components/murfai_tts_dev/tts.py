@@ -39,7 +39,7 @@ async def async_setup_entry(
         config_entry.data.get(CONF_FORMAT_MP3, False),
         config_entry.data.get(CONF_MULTI_NATIVE_LOCALE),
         config_entry.data.get(CONF_PRONUNCIATION_DICTIONARY),
-        config_entry.data.get(CONF_SAMPLE_RATE, 44100),
+        int(config_entry.data.get(CONF_SAMPLE_RATE, 44100)),
     )
     async_add_entities([MurfAITTSEntity(hass, config_entry, engine)])
 
