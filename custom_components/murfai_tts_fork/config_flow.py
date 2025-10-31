@@ -10,7 +10,21 @@ from homeassistant.config_entries import ConfigFlow
 from homeassistant.helpers.selector import selector
 from homeassistant.exceptions import HomeAssistantError
 
-from .const import CONF_API_KEY, CONF_MODEL, CONF_STYLE, CONF_URL, DOMAIN, MODELS, STYLES, UNIQUE_ID # Add CONF_API_KEY
+# Import all your new constants
+from .const import (
+    CONF_API_KEY,
+    CONF_FORMAT_MP3,
+    CONF_LOCALE,
+    CONF_MODEL,
+    CONF_PRONUNCIATION,
+    CONF_SAMPLE_RATE,
+    CONF_STYLE,
+    CONF_URL,
+    DOMAIN,
+    MODELS,
+    STYLES,
+    UNIQUE_ID,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
