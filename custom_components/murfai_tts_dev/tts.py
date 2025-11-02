@@ -56,7 +56,7 @@ class MurfAITTSEntity(TextToSpeechEntity):
         self.hass = hass
         self._engine = engine
         self._config = config
-        self.language_map = {"de": "de-DE", "en": "en-US"}
+        self.language_map = {"de": "de-DE", "en": "en-UK"}
         self._attr_unique_id = config.data.get(UNIQUE_ID)
         if self._attr_unique_id is None:
             self._attr_unique_id = f"{config.data[CONF_STYLE]}_{config.data[CONF_MODEL]}"
