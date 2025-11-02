@@ -4,7 +4,7 @@ from io import BytesIO
 
 class MurfAITTSEngine:
 
-    def __init__(self, api_key: str, style: str, model: str, url: str, format_mp3: bool, multi_native_locale: str, pronunciation_dictionary: str, sample_rate: int):
+    def __init__(self, api_key: str, style: str, model: str, url: str, format_mp3: bool, multi_native_locale: str | None, pronunciation_dictionary: str, sample_rate: int):
         self._api_key = api_key
         self._style = style
         self._model = model
@@ -17,7 +17,7 @@ class MurfAITTSEngine:
             self._pronunciation_dictionary = None
         self._sample_rate = sample_rate
 
-    def get_tts(self, text: str):
+    def get_tts(self, text: str, language: str | None = None):
         """ Makes request to MurfAI TTS engine to convert text into audio"""
         headers = {
             "Content-Type": "application/json",
@@ -32,8 +32,13 @@ class MurfAITTSEngine:
             "sampleRate": self._sample_rate,
         }
 
-        if self._multi_native_locale:
-            data["multiNativeLocale"] = self._multi_native_locale
+        # Determine which locale to use for this specific request
+        effective_locale = language or self._multi_native_locale
+
+        # *** THIS IS THE FIX ***
+        # Only add the parameter if the locale is a non-empty string
+        if effective_locale:
+            data["multiNativeLocale"] = effective_locale
 
         if self._pronunciation_dictionary:
             data["pronunciationDictionary"] = self._pronunciation_dictionary
