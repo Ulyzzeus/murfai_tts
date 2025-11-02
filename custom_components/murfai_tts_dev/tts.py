@@ -16,6 +16,7 @@ from .const import (
     CONF_MULTI_NATIVE_LOCALE,
     CONF_PRONUNCIATION_DICTIONARY,
     CONF_SAMPLE_RATE,
+    CONF_VOICE_LOCALE,
     DOMAIN,
     UNIQUE_ID,
 )
@@ -43,6 +44,7 @@ async def async_setup_entry(
         config_entry.data.get(CONF_MULTI_NATIVE_LOCALE),
         config_entry.data.get(CONF_PRONUNCIATION_DICTIONARY),
         int(config_entry.data.get(CONF_SAMPLE_RATE, 44100)),
+        config_entry.data.get(CONF_VOICE_LOCALE),
     )
     async_add_entities([MurfAITTSEntity(hass, config_entry, engine)])
 
