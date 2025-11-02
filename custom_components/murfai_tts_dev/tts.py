@@ -4,7 +4,7 @@ Setting up TTS entity.
 import logging
 from homeassistant.components.tts import TextToSpeechEntity
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, State
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.entity import generate_entity_id
 from .const import (
@@ -23,6 +23,9 @@ from .murfaitts_engine import MurfAITTSEngine
 from homeassistant.exceptions import MaxLengthExceeded
 
 _LOGGER = logging.getLogger(__name__)
+
+# Define the entity ID of your helper
+LAST_LANG_HELPER = "input_text.last_detected_language"
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -54,17 +57,22 @@ class MurfAITTSEntity(TextToSpeechEntity):
         self.hass = hass
         self._engine = engine
         self._config = config
+        # Simple mapping for language codes to specific locales
+        self.language_map = {
+            "de": "de-DE",
+            "en": "en-GB",  # <-- This line has been changed
+            # Add more mappings here if needed in the future
+        }
 
         self._attr_unique_id = config.data.get(UNIQUE_ID)
         if self._attr_unique_id is None:
-            # generate a legacy unique_id
             self._attr_unique_id = f"{config.data[CONF_STYLE]}_{config.data[CONF_MODEL]}"
         self.entity_id = generate_entity_id(f"tts.{DOMAIN}_" + "{}", config.data[CONF_STYLE], hass=hass)
 
     @property
     def default_language(self):
         """Return the default language."""
-        return "en"
+        return self._config.data.get(CONF_MULTI_NATIVE_LOCALE) or "en-US"
 
     @property
     def supported_languages(self):
@@ -90,9 +98,17 @@ class MurfAITTSEntity(TextToSpeechEntity):
             if len(message) > 4096:
                 raise MaxLengthExceeded
 
-            speech = self._engine.get_tts(message)
+            last_lang_state: State | None = self.hass.states.get(LAST_LANG_HELPER)
+            effective_language = language
 
-            # The response should contain the audio file content
+            if last_lang_state and last_lang_state.state not in ("unknown", "unavailable"):
+                _LOGGER.debug(f"Overriding language with helper value: {last_lang_state.state}")
+                detected_lang = last_lang_state.state
+                # Convert the general language code to the specific locale MurfAI needs
+                effective_language = self.language_map.get(detected_lang, detected_lang)
+                _LOGGER.debug(f"Mapped language to: {effective_language}")
+
+            speech = self._engine.get_tts(message, language=effective_language)
             return self._engine._format.lower(), speech
         except MaxLengthExceeded:
             _LOGGER.error("Maximum length of the message exceeded")
