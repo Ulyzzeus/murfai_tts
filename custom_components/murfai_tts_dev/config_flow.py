@@ -148,7 +148,7 @@ class MurfAITTSConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             locale_options.extend(list(selected_voice["supportedLocales"].keys()))
 
         options_schema = vol.Schema({
-            vol.Optional(CONF_URL, default="https://api.murf.ai/v1/speech/generate"): str,
+            vol.Optional(CONF_URL, default="https://api.murf.ai/v1/speech/stream"): str,
             vol.Optional(CONF_FORMAT_MP3, default=False): bool,
             vol.Optional(CONF_MULTI_NATIVE_LOCALE, default="None"): selector({
                 "select": { "options": locale_options, "mode": "dropdown" }

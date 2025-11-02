@@ -2,7 +2,11 @@
 Setting up TTS entity.
 """
 import logging
-from homeassistant.components.tts import TextToSpeechEntity
+from homeassistant.components.tts import (
+    TextToSpeechEntity,
+    TtsAudioType,
+    async_get_media_source_engine,
+)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, State
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -21,7 +25,7 @@ from .const import (
     UNIQUE_ID,
 )
 from .murfaitts_engine import MurfAITTSEngine
-from homeassistant.exceptions import MaxLengthExceeded
+from homeassistant.exceptions import HomeAssistantError
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -42,7 +46,6 @@ async def async_setup_entry(
         config_entry.data.get(CONF_MULTI_NATIVE_LOCALE),
         config_entry.data.get(CONF_PRONUNCIATION_DICTIONARY),
         int(config_entry.data.get(CONF_SAMPLE_RATE, 44100)),
-        # This .get() is the fix. It provides 'None' if the key is missing in old configs.
         config_entry.data.get(CONF_VOICE_LOCALE),
     )
     async_add_entities([MurfAITTSEntity(hass, config_entry, engine)])
@@ -50,6 +53,8 @@ async def async_setup_entry(
 class MurfAITTSEntity(TextToSpeechEntity):
     _attr_has_entity_name = True
     _attr_should_poll = False
+    # This property tells Home Assistant that we support streaming
+    _attr_can_stream = True
 
     def __init__(self, hass, config, engine):
         """Initialize TTS entity."""
@@ -82,21 +87,27 @@ class MurfAITTSEntity(TextToSpeechEntity):
     def name(self):
         return f"{self._config.data[CONF_STYLE]}"
 
-    def get_tts_audio(self, message, language, options=None):
+    async def async_get_tts_audio(self, message: str, language: str, options: dict) -> TtsAudioType:
+        """Stream TTS audio."""
+        # This is the new streaming method
+        media_engine = await async_get_media_source_engine(self.hass)
+        
+        last_lang_state: State | None = self.hass.states.get(LAST_LANG_HELPER)
+        effective_language = language
+        if last_lang_state and last_lang_state.state not in ("unknown", "unavailable"):
+            detected_lang = last_lang_state.state
+            effective_language = self.language_map.get(detected_lang, detected_lang)
+
         try:
-            if len(message) > 4096:
-                raise MaxLengthExceeded
-
-            last_lang_state: State | None = self.hass.states.get(LAST_LANG_HELPER)
-            effective_language = language
-            if last_lang_state and last_lang_state.state not in ("unknown", "unavailable"):
-                detected_lang = last_lang_state.state
-                effective_language = self.language_map.get(detected_lang, detected_lang)
-
-            speech = self._engine.get_tts(message, language=effective_language)
-            return self._engine._format.lower(), speech
-        except MaxLengthExceeded:
-            _LOGGER.error("Maximum length of the message exceeded")
+            audio_stream = await self.hass.async_add_executor_job(
+                self._engine.get_tts_audio_stream, message, effective_language
+            )
+            
+            return await media_engine.async_load_stream(
+                "MurfAI TTS",
+                audio_stream,
+                content_type=f"audio/{self._engine._format.lower()}",
+            )
         except Exception as e:
-            _LOGGER.error("Unknown Error: %s", e)
-        return None, None
+            _LOGGER.error("Unknown Error during streaming: %s", e)
+            raise HomeAssistantError(e) from e
