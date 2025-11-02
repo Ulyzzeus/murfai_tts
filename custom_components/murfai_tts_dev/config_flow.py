@@ -88,6 +88,15 @@ class MurfAITTSConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         _LOGGER.debug("Step: model, user_input: %s", user_input)
         if user_input is not None:
             self.config_data.update(user_input)
+
+            # Find the selected voice and store its original locale
+            selected_model_id = self.config_data.get(CONF_MODEL)
+            selected_voice = next(
+                (v for v in self.voices if v["voiceId"] == selected_model_id), None
+            )
+            if selected_voice:
+                self.config_data[CONF_VOICE_LOCALE] = selected_voice.get('locale')
+
             _LOGGER.debug("Model selected, proceeding to style step. Current data: %s", self.config_data)
             return await self.async_step_style()
 
